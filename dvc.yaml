@@ -1,0 +1,7 @@
+stages:
+  train:
+    cmd: train.sh
+    deps:
+    - train.sh
+    outs:
+      - context.nippy
