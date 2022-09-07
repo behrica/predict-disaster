@@ -1,7 +1,8 @@
 stages:
   train:
-    cmd: train.sh
+    cmd: ./train.sh
     deps:
-    - train.sh
+      - train.clj
     outs:
-      - context.nippy
+      - outputs
+      - train-result.edn

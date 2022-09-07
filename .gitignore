@@ -5,3 +5,4 @@
 cache_dir/
 classes/
 /outputs
+/train-result.edn

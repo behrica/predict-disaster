@@ -2,8 +2,15 @@ schema: '2.0'
 stages:
   train:
     cmd: ./train.sh
+    deps:
+    - path: train.clj
+      md5: d510cbca06417bce10957434df63976b
+      size: 1532
     outs:
     - path: outputs
-      md5: 4078a25d7c4def0846951c8c2b558aeb.dir
-      size: 554745007
-      nfiles: 108
+      md5: f14816b1e5d658011a00c87efbf596aa.dir
+      size: 125758590
+      nfiles: 32
+    - path: train-result.edn
+      md5: f7b8a4260e0af33b8340df94a3888548
+      size: 213
