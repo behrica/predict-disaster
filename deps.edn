@@ -1,0 +1,2 @@
+{:deps {scicloj/scicloj.ml {:mvn/version "0.2.1"}
+        clj-python/libpython-clj {:mvn/version "2.018"}}}
