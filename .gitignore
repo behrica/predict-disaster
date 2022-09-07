@@ -4,3 +4,4 @@
 .nrepl-port
 cache_dir/
 classes/
+/outputs

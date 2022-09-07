@@ -1,0 +1,9 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: ./train.sh
+    outs:
+    - path: outputs
+      md5: 4078a25d7c4def0846951c8c2b558aeb.dir
+      size: 554745007
+      nfiles: 108
