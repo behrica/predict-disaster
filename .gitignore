@@ -9,3 +9,4 @@ classes/
 train.arrow
 test.arrow
 /eval.json
+/kaggle_submission.csv

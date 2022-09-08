@@ -4,28 +4,28 @@ stages:
     cmd: python train.py
     deps:
     - path: test.arrow
-      md5: 0e50fff23c20701dde3d72002b9d3e32
-      size: 250722
+      md5: 0c00069835ffab82d0a9c70d18ae9cb3
+      size: 250122
     - path: train.arrow
-      md5: 84e333fd5fc623a6774eed66668535ea
-      size: 578346
+      md5: 2feb0b6ffd57e350d509d8d9d3309fa6
+      size: 578858
     - path: train.py
       md5: b969a834fb4f680bb1ffe69b52928385
       size: 806
     params:
       params.yaml:
-        train.model_name: distilbert-base-uncased
-        train.model_type: distilbert
+        train.model_name: prajjwal1/bert-tiny
+        train.model_type: bert
         train.num_train_epochs: 5
-        train.train_batch_size: 8
+        train.train_batch_size: 16
     outs:
     - path: eval.json
-      md5: 60061f37b0f4655620a1a391c144cbfc
+      md5: 2766c60533354d44d50c1a13ae51c992
       size: 38
     - path: outputs
-      md5: c7b2555903af4cc09ec22de8c5fdb002.dir
-      size: 5095833150
-      nfiles: 69
+      md5: 2fb02f246da3e975e5fe2851fccc5569.dir
+      size: 286636334
+      nfiles: 59
   preprcess:
     cmd: clj preprocess.clj
     outs:
@@ -51,3 +51,17 @@ stages:
     - path: train.arrow
       md5: 2feb0b6ffd57e350d509d8d9d3309fa6
       size: 578858
+  predict_kaggle:
+    cmd: python -c 'from clojurebridge import cljbridge;cljbridge.load_clojure_file(clj_file="predict_kaggle.clj",mvn_local_repo="/home/carsten/.m2/repository")'
+    deps:
+    - path: outputs
+      md5: 2fb02f246da3e975e5fe2851fccc5569.dir
+      size: 286636334
+      nfiles: 59
+    - path: predict_kaggle.clj
+      md5: e1214b656e42252ffe4911936cd5e16b
+      size: 1007
+    outs:
+    - path: kaggle_submission.csv
+      md5: 54ff658e4ce9cb686ef0c5264c58b220
+      size: 22746
