@@ -8,3 +8,4 @@ classes/
 /train-result.edn
 train.arrow
 test.arrow
+/eval.json

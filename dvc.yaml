@@ -14,3 +14,7 @@ stages:
       - test.arrow
     outs:
       - outputs
+    metrics:
+      - eval.json
+    params:
+      - num_train_epochs

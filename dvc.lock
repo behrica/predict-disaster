@@ -10,13 +10,19 @@ stages:
       md5: 731db9bb224b57ed80c52504bab67ff6
       size: 580034
     - path: train.py
-      md5: 5d1d9abb1d4c0909c74d28e6ca15656d
-      size: 477
+      md5: 73d02b89604af1a40673b3af7ac26242
+      size: 766
+    params:
+      params.yaml:
+        num_train_epochs: 1
     outs:
+    - path: eval.json
+      md5: 182f52be10374b715e11971dc4946029
+      size: 38
     - path: outputs
-      md5: 560a8c0f0781a33a4499ce0e37c15537.dir
-      size: 340260628
-      nfiles: 68
+      md5: 15d71ff53f91e84c13b4e4d6de3616aa.dir
+      size: 72136751
+      nfiles: 19
   preprcess:
     cmd: clj preprocess.clj
     outs:
