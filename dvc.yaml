@@ -26,7 +26,7 @@ stages:
       - train.train_batch_size
 
 
-   predict_kaggle:
+  predict_kaggle:
      cmd: python -c 'from clojurebridge import cljbridge;cljbridge.load_clojure_file(clj_file="predict_kaggle.clj",mvn_local_repo="/home/carsten/.m2/repository")'
      deps:
        - outputs

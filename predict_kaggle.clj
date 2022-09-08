@@ -10,7 +10,7 @@
 (require-python '[pandas :as pd :reload])
 
 (def model
-  (classification/ClassificationModel "distilbert" "./outputs/checkpoint-667-epoch-1/"))
+  (classification/ClassificationModel "distilbert" "./outputs"))
 
 
 (def  test

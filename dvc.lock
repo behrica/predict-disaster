@@ -14,16 +14,17 @@ stages:
       size: 806
     params:
       params.yaml:
-        train.model_name: prajjwal1/bert-tiny
-        train.model_type: bert
+        train.model_name: distilbert-base-uncased
+        train.model_type: distilbert
         train.num_train_epochs: 5
+        train.train_batch_size: 8
     outs:
     - path: eval.json
-      md5: 1b8733c84dab98ceb9807f1edfa29b1e
+      md5: 60061f37b0f4655620a1a391c144cbfc
       size: 38
     - path: outputs
-      md5: 91b49f8516f35d740d8ff22f20207655.dir
-      size: 340261223
+      md5: c7b2555903af4cc09ec22de8c5fdb002.dir
+      size: 5095833150
       nfiles: 69
   preprcess:
     cmd: clj preprocess.clj
@@ -36,10 +37,17 @@ stages:
       size: 578642
   preprocess:
     cmd: clj preprocess.clj
+    deps:
+    - path: test.csv
+      md5: ff248529f207ea164d73636e5b1b251d
+      size: 420783
+    - path: train.csv
+      md5: f147942c91d00d754503775341d13682
+      size: 987712
     outs:
     - path: test.arrow
-      md5: 0e50fff23c20701dde3d72002b9d3e32
-      size: 250722
+      md5: 0c00069835ffab82d0a9c70d18ae9cb3
+      size: 250122
     - path: train.arrow
-      md5: 84e333fd5fc623a6774eed66668535ea
-      size: 578346
+      md5: 2feb0b6ffd57e350d509d8d9d3309fa6
+      size: 578858
