@@ -2,6 +2,7 @@ stages:
   preprocess:
     cmd: clj preprocess.clj
     deps:
+      - preprocess.clj
       - train.csv
       - test.csv
     outs:

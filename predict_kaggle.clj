@@ -5,11 +5,28 @@
             [scicloj.ml.dataset :as ds]
             [clojure.data.json :as json]
             [clj-yaml.core :as yaml]
+            [tablecloth.api :as tc]
+
             [tech.v3.libs.arrow :as arrow]))
 
 (require-python '[simpletransformers.classification
                   :as classification :reload])
 (require-python '[pandas :as pd :reload])
+
+(defn preprocess [ds]
+  (-> ds
+      (tc/replace-missing [:location] :value "unknown")
+      (tc/replace-missing [:keyword] :value "")
+      (tc/add-or-replace-column
+       :text
+       (fn [ds] (map (fn [text location keyword]
+                      (format "Keyword: %s\nLocation: %s.\n%s"
+                              keyword location text))
+                    (:text ds)
+                    (:location ds)
+                    (:keyword ds))))
+      (ds/rename-columns {:target :labels})))
+
 
 (def params
   (->
@@ -26,7 +43,7 @@
 (def  test
   (->
    (ds/dataset "test.csv" {:key-fn keyword})
-   (ds/select-columns [:text :id])))
+   preprocess))
 
 
 

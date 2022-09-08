@@ -4,14 +4,14 @@ stages:
     cmd: python train.py
     deps:
     - path: test.arrow
-      md5: 0c00069835ffab82d0a9c70d18ae9cb3
-      size: 250122
+      md5: 031bae7ae481e61a6382731f6eee15d8
+      size: 386762
     - path: train.arrow
-      md5: 2feb0b6ffd57e350d509d8d9d3309fa6
-      size: 578858
+      md5: f48e939ff4f256704fdce165684ca2a3
+      size: 890338
     - path: train.py
-      md5: b969a834fb4f680bb1ffe69b52928385
-      size: 806
+      md5: 14e8828178e50c6707e6f2b9896f8259
+      size: 790
     params:
       params.yaml:
         train.model_name: prajjwal1/bert-tiny
@@ -20,10 +20,10 @@ stages:
         train.train_batch_size: 16
     outs:
     - path: eval.json
-      md5: 2766c60533354d44d50c1a13ae51c992
+      md5: 33b86f0da7dc89fb1014864cea8c34b0
       size: 38
     - path: outputs
-      md5: 2fb02f246da3e975e5fe2851fccc5569.dir
+      md5: 9d4c2bcfac4132127201c02ed1a43c25.dir
       size: 286636334
       nfiles: 59
   preprcess:
@@ -38,6 +38,9 @@ stages:
   preprocess:
     cmd: clj preprocess.clj
     deps:
+    - path: preprocess.clj
+      md5: 158c8f9e5edb0b6a73b086af0072fe49
+      size: 927
     - path: test.csv
       md5: ff248529f207ea164d73636e5b1b251d
       size: 420783
@@ -46,22 +49,22 @@ stages:
       size: 987712
     outs:
     - path: test.arrow
-      md5: 0c00069835ffab82d0a9c70d18ae9cb3
-      size: 250122
+      md5: 031bae7ae481e61a6382731f6eee15d8
+      size: 386762
     - path: train.arrow
-      md5: 2feb0b6ffd57e350d509d8d9d3309fa6
-      size: 578858
+      md5: f48e939ff4f256704fdce165684ca2a3
+      size: 890338
   predict_kaggle:
     cmd: python -c 'from clojurebridge import cljbridge;cljbridge.load_clojure_file(clj_file="predict_kaggle.clj",mvn_local_repo="/home/carsten/.m2/repository")'
     deps:
     - path: outputs
-      md5: 2fb02f246da3e975e5fe2851fccc5569.dir
+      md5: 9d4c2bcfac4132127201c02ed1a43c25.dir
       size: 286636334
       nfiles: 59
     - path: predict_kaggle.clj
-      md5: e1214b656e42252ffe4911936cd5e16b
-      size: 1007
+      md5: 64c9366e4b753557a5c98bc060e10895
+      size: 1504
     outs:
     - path: kaggle_submission.csv
-      md5: 54ff658e4ce9cb686ef0c5264c58b220
+      md5: 0e6046b252c7f8d7fc7a1260c4e9e7e3
       size: 22746
