@@ -28,7 +28,7 @@ stages:
 
 
   predict_kaggle:
-     cmd: python -c 'from clojurebridge import cljbridge;cljbridge.load_clojure_file(clj_file="predict_kaggle.clj",mvn_local_repo="/home/carsten/.m2/repository")'
+     cmd: clj predict_kaggle.clj
      deps:
        - outputs
        - predict_kaggle.clj

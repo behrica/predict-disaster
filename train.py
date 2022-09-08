@@ -10,7 +10,10 @@ with open("params.yaml", 'r') as f:
     params = yaml.load(f, Loader=yaml.FullLoader)
 
 
-model_args = {"use_cuda": True} | params['train']
+model_args =  {"use_cuda": True,
+               "evaluate_during_training_steps": 100,
+               "evaluate_during_training": True,
+               "evaluate_during_training_verbose": True} | params['train']
 
 
 train_df = feather.read_feather("train.arrow")

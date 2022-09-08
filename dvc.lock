@@ -10,8 +10,8 @@ stages:
       md5: f48e939ff4f256704fdce165684ca2a3
       size: 890338
     - path: train.py
-      md5: 14e8828178e50c6707e6f2b9896f8259
-      size: 790
+      md5: 1acaa2f916179d92924f84acd02b3e55
+      size: 951
     params:
       params.yaml:
         train.model_name: prajjwal1/bert-tiny
@@ -20,12 +20,12 @@ stages:
         train.train_batch_size: 16
     outs:
     - path: eval.json
-      md5: 33b86f0da7dc89fb1014864cea8c34b0
+      md5: cbdaa2d01c206fdfa9cc563032aec155
       size: 38
     - path: outputs
-      md5: 9d4c2bcfac4132127201c02ed1a43c25.dir
-      size: 286636334
-      nfiles: 59
+      md5: 48004f0f05fdea8b382651d1055c8f43.dir
+      size: 1198265044
+      nfiles: 252
   preprcess:
     cmd: clj preprocess.clj
     outs:
@@ -58,13 +58,13 @@ stages:
     cmd: python -c 'from clojurebridge import cljbridge;cljbridge.load_clojure_file(clj_file="predict_kaggle.clj",mvn_local_repo="/home/carsten/.m2/repository")'
     deps:
     - path: outputs
-      md5: 9d4c2bcfac4132127201c02ed1a43c25.dir
-      size: 286636334
-      nfiles: 59
+      md5: 48004f0f05fdea8b382651d1055c8f43.dir
+      size: 1198265044
+      nfiles: 252
     - path: predict_kaggle.clj
       md5: 64c9366e4b753557a5c98bc060e10895
       size: 1504
     outs:
     - path: kaggle_submission.csv
-      md5: 0e6046b252c7f8d7fc7a1260c4e9e7e3
+      md5: 0f546bd676606042c5de1be20ac29760
       size: 22746
