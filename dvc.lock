@@ -4,25 +4,27 @@ stages:
     cmd: python train.py
     deps:
     - path: test.arrow
-      md5: 49e6fbb0b8c811c71d3a7169ed744f04
-      size: 249162
+      md5: 0e50fff23c20701dde3d72002b9d3e32
+      size: 250722
     - path: train.arrow
-      md5: 731db9bb224b57ed80c52504bab67ff6
-      size: 580034
+      md5: 84e333fd5fc623a6774eed66668535ea
+      size: 578346
     - path: train.py
-      md5: 73d02b89604af1a40673b3af7ac26242
-      size: 766
+      md5: b969a834fb4f680bb1ffe69b52928385
+      size: 806
     params:
       params.yaml:
-        num_train_epochs: 1
+        train.model_name: prajjwal1/bert-tiny
+        train.model_type: bert
+        train.num_train_epochs: 5
     outs:
     - path: eval.json
-      md5: 182f52be10374b715e11971dc4946029
+      md5: 1b8733c84dab98ceb9807f1edfa29b1e
       size: 38
     - path: outputs
-      md5: 15d71ff53f91e84c13b4e4d6de3616aa.dir
-      size: 72136751
-      nfiles: 19
+      md5: 91b49f8516f35d740d8ff22f20207655.dir
+      size: 340261223
+      nfiles: 69
   preprcess:
     cmd: clj preprocess.clj
     outs:
@@ -36,8 +38,8 @@ stages:
     cmd: clj preprocess.clj
     outs:
     - path: test.arrow
-      md5: 49e6fbb0b8c811c71d3a7169ed744f04
-      size: 249162
+      md5: 0e50fff23c20701dde3d72002b9d3e32
+      size: 250722
     - path: train.arrow
-      md5: 731db9bb224b57ed80c52504bab67ff6
-      size: 580034
+      md5: 84e333fd5fc623a6774eed66668535ea
+      size: 578346

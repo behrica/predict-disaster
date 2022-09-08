@@ -11,10 +11,10 @@ with open("params.yaml", 'r') as f:
     params = yaml.load(f, Loader=yaml.FullLoader)
 
 
-model_args = {"use_cuda": True} | params
+model_args = {"use_cuda": True} | params['train']
 
-model = ClassificationModel("bert",
-                            "prajjwal1/bert-tiny",
+model = ClassificationModel(params['train']['model_type'],
+                            params['train']['model_name'],
                             args=model_args)
 
 train_df = feather.read_feather("train.arrow")

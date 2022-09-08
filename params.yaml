@@ -1,2 +1,4 @@
 train:
-  num_train_epochs: 1
+  num_train_epochs: 5
+  model_type: "bert"
+  model_name:  "prajjwal1/bert-tiny"

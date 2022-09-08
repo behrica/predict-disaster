@@ -17,4 +17,6 @@ stages:
     metrics:
       - eval.json
     params:
-      - num_train_epochs
+      - train.num_train_epochs
+      - train.model_type
+      - train.model_name
