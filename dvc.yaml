@@ -1,6 +1,9 @@
 stages:
   preprocess:
     cmd: clj preprocess.clj
+    deps:
+      - train.csv
+      - test.csv
     outs:
       - train.arrow
       - test.arrow
@@ -20,3 +23,13 @@ stages:
       - train.num_train_epochs
       - train.model_type
       - train.model_name
+      - train.train_batch_size
+
+
+   predict_kaggle:
+     cmd: python -c 'from clojurebridge import cljbridge;cljbridge.load_clojure_file(clj_file="predict_kaggle.clj",mvn_local_repo="/home/carsten/.m2/repository")'
+     deps:
+       - outputs
+       - predict_kaggle.clj
+     outs:
+       - kaggle_submission.csv

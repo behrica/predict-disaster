@@ -6,11 +6,6 @@
 
 
 
-;; (require-python '[simpletransformers.classification
-;;                   :as classification :reload])
-;; (require-python '[pandas :as pd :reload])
-
-
 
 
 

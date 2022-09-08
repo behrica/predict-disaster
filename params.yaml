@@ -1,4 +1,5 @@
 train:
   num_train_epochs: 5
-  model_type: "bert"
-  model_name:  "prajjwal1/bert-tiny"
+  model_type: "distilbert"
+  model_name:  "distilbert-base-uncased"
+  train_batch_size: 8
