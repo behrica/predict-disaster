@@ -27,7 +27,6 @@
   (->
    (ds/dataset "test.csv" {:key-fn keyword})
    (ds/select-columns [:text :id])))
-   ;; (ds/head)
 
 
 

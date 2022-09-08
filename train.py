@@ -2,7 +2,6 @@
 
 from simpletransformers.classification import ClassificationModel
 import pandas as pd
-import pyarrow as pa
 import pyarrow.feather as feather
 import yaml
 import json
@@ -13,12 +12,17 @@ with open("params.yaml", 'r') as f:
 
 model_args = {"use_cuda": True} | params['train']
 
+
+train_df = feather.read_feather("train.arrow")
+eval_df =  feather.read_feather("test.arrow")
+
+
 model = ClassificationModel(params['train']['model_type'],
                             params['train']['model_name'],
                             args=model_args)
 
-train_df = feather.read_feather("train.arrow")
-eval_df =  feather.read_feather("test.arrow")
+
+
 model.train_model(train_df,eval_df=eval_df)
 
 eval_result =  model.eval_model(eval_df)
