@@ -1,16 +1,37 @@
 schema: '2.0'
 stages:
   train:
-    cmd: ./train.sh
+    cmd: python train.py
     deps:
-    - path: train.clj
-      md5: d510cbca06417bce10957434df63976b
-      size: 1532
+    - path: test.arrow
+      md5: 49e6fbb0b8c811c71d3a7169ed744f04
+      size: 249162
+    - path: train.arrow
+      md5: 731db9bb224b57ed80c52504bab67ff6
+      size: 580034
+    - path: train.py
+      md5: 5d1d9abb1d4c0909c74d28e6ca15656d
+      size: 477
     outs:
     - path: outputs
-      md5: f14816b1e5d658011a00c87efbf596aa.dir
-      size: 125758590
-      nfiles: 32
-    - path: train-result.edn
-      md5: f7b8a4260e0af33b8340df94a3888548
-      size: 213
+      md5: 560a8c0f0781a33a4499ce0e37c15537.dir
+      size: 340260628
+      nfiles: 68
+  preprcess:
+    cmd: clj preprocess.clj
+    outs:
+    - path: test.arrow
+      md5: 9ec7b20767104d5e5163dd1b0b9c8d3a
+      size: 249602
+    - path: train.arrow
+      md5: d927714523a1e5bd60c8940199158497
+      size: 578642
+  preprocess:
+    cmd: clj preprocess.clj
+    outs:
+    - path: test.arrow
+      md5: 49e6fbb0b8c811c71d3a7169ed744f04
+      size: 249162
+    - path: train.arrow
+      md5: 731db9bb224b57ed80c52504bab67ff6
+      size: 580034

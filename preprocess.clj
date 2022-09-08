@@ -33,7 +33,7 @@
 (arrow/dataset->stream! (:test-ds data-split) "test.arrow")
 
 
-
+(System/exit 0)
 
 
 

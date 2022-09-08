@@ -1,8 +1,16 @@
 stages:
+  preprocess:
+    cmd: clj preprocess.clj
+    outs:
+      - train.arrow
+      - test.arrow
+
+
   train:
-    cmd: ./train.sh
+    cmd: python train.py
     deps:
-      - train.clj
+      - train.py
+      - train.arrow
+      - test.arrow
     outs:
       - outputs
-      - train-result.edn
