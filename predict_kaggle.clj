@@ -37,7 +37,7 @@
 (def model
   (classification/ClassificationModel
    (:model_type params)
-   "./outputs"))
+   "./outputs/best_model/"))
 
 
 (def  test

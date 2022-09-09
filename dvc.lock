@@ -10,22 +10,22 @@ stages:
       md5: f48e939ff4f256704fdce165684ca2a3
       size: 890338
     - path: train.py
-      md5: 1acaa2f916179d92924f84acd02b3e55
-      size: 951
+      md5: 92ad3ee2fd362bc365893794bdb2a04b
+      size: 1008
     params:
       params.yaml:
-        train.model_name: prajjwal1/bert-tiny
-        train.model_type: bert
+        train.model_name: roberta-base
+        train.model_type: roberta
         train.num_train_epochs: 5
         train.train_batch_size: 16
     outs:
     - path: eval.json
-      md5: cbdaa2d01c206fdfa9cc563032aec155
+      md5: 9f1fe75a4a0432813f6e53f7a1b725ba
       size: 38
     - path: outputs
-      md5: 48004f0f05fdea8b382651d1055c8f43.dir
-      size: 1198265044
-      nfiles: 252
+      md5: 8e1ad8ccad8d7e3f50ba59ab14bbf7be.dir
+      size: 33487191600
+      nfiles: 275
   preprcess:
     cmd: clj preprocess.clj
     outs:
@@ -55,16 +55,16 @@ stages:
       md5: f48e939ff4f256704fdce165684ca2a3
       size: 890338
   predict_kaggle:
-    cmd: python -c 'from clojurebridge import cljbridge;cljbridge.load_clojure_file(clj_file="predict_kaggle.clj",mvn_local_repo="/home/carsten/.m2/repository")'
+    cmd: clj predict_kaggle.clj
     deps:
     - path: outputs
-      md5: 48004f0f05fdea8b382651d1055c8f43.dir
-      size: 1198265044
-      nfiles: 252
+      md5: 8e1ad8ccad8d7e3f50ba59ab14bbf7be.dir
+      size: 33487191600
+      nfiles: 275
     - path: predict_kaggle.clj
-      md5: 64c9366e4b753557a5c98bc060e10895
-      size: 1504
+      md5: 3eeead5788f6ee58379cb3a196e71878
+      size: 1516
     outs:
     - path: kaggle_submission.csv
-      md5: 0f546bd676606042c5de1be20ac29760
+      md5: 8bba3998016dfbce14f3fab4e4594cc9
       size: 22746
