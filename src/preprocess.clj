@@ -19,19 +19,14 @@
       (tc/rename-columns {:target :labels})))
 
 
+(defn do-preprocess [_]
+  (let [data
+        (->
+         (tc/dataset "train.csv" {:key-fn keyword})
+         preprocess)
+        data-split (first (tc/split->seq data :holdout {:seed 12345}))]
+    (arrow/dataset->stream! (:train data-split) "train.arrow")
+    (arrow/dataset->stream! (:test data-split) "test.arrow")
+    (shutdown-agents)))
 
-(def  data
-  (->
-   (tc/dataset "train.csv" {:key-fn keyword})
-   preprocess))
 
-
-
-(def data-split
-  (first (tc/split->seq data :holdout {:seed 12345})))
-
-(arrow/dataset->stream! (:train data-split) "train.arrow")
-(arrow/dataset->stream! (:test data-split) "test.arrow")
-
-(shutdown-agents)
-;; (System/exit 0)

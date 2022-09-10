@@ -4,14 +4,14 @@ stages:
     cmd: python train.py
     deps:
     - path: test.arrow
-      md5: 031bae7ae481e61a6382731f6eee15d8
-      size: 386762
+      md5: 044e70620365604959786ba2aebc9f96
+      size: 428426
     - path: train.arrow
-      md5: f48e939ff4f256704fdce165684ca2a3
-      size: 890338
+      md5: e17a0868efa512c21e2a8cc90da78b7d
+      size: 849786
     - path: train.py
-      md5: 92ad3ee2fd362bc365893794bdb2a04b
-      size: 1008
+      md5: 548d0707159d3aa5ac2269ac21496d81
+      size: 1098
     params:
       params.yaml:
         train.model_name: roberta-base
@@ -20,12 +20,12 @@ stages:
         train.train_batch_size: 16
     outs:
     - path: eval.json
-      md5: 9f1fe75a4a0432813f6e53f7a1b725ba
-      size: 38
+      md5: de6777d0ca1303a3d9e5ed7b860473f0
+      size: 37
     - path: outputs
-      md5: 8e1ad8ccad8d7e3f50ba59ab14bbf7be.dir
-      size: 33487191600
-      nfiles: 275
+      md5: 30bbfe6b0ec852976423bfda8c834494.dir
+      size: 5000008256
+      nfiles: 48
   preprcess:
     cmd: clj preprocess.clj
     outs:
@@ -58,13 +58,13 @@ stages:
     cmd: clj predict_kaggle.clj
     deps:
     - path: outputs
-      md5: 8e1ad8ccad8d7e3f50ba59ab14bbf7be.dir
-      size: 33487191600
-      nfiles: 275
+      md5: 30bbfe6b0ec852976423bfda8c834494.dir
+      size: 5000008256
+      nfiles: 48
     - path: predict_kaggle.clj
       md5: 3eeead5788f6ee58379cb3a196e71878
       size: 1516
     outs:
     - path: kaggle_submission.csv
-      md5: 8bba3998016dfbce14f3fab4e4594cc9
+      md5: 6c752a4805d74c613f69927f966dbd27
       size: 22746

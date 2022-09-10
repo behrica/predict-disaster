@@ -1,8 +1,8 @@
 stages:
   preprocess:
-    cmd: clj preprocess.clj
+    cmd: clj -X preprocess/do-preprocess
     deps:
-      - preprocess.clj
+      - src/preprocess.clj
       - train.csv
       - test.csv
     outs:
@@ -28,9 +28,16 @@ stages:
 
 
   predict_kaggle:
-     cmd: clj predict_kaggle.clj
+     cmd: clj -X predict_kaggle/predict-kaggle
      deps:
        - outputs
-       - predict_kaggle.clj
+       - src/predict_kaggle.clj
      outs:
        - kaggle_submission.csv
+
+plots:
+  outputs/training_progress_scores.csv:
+    x: global_step
+    y:
+      - train_loss
+      - eval_loss
