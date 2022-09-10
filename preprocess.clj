@@ -1,5 +1,5 @@
 (ns preprocess
-   (:require [scicloj.ml.dataset :as ds]
+   (:require
              [tablecloth.api :as tc]
              [tech.v3.libs.arrow :as arrow]))
 
@@ -16,21 +16,22 @@
                     (:text ds)
                     (:location ds)
                     (:keyword ds))))
-      (ds/rename-columns {:target :labels})))
+      (tc/rename-columns {:target :labels})))
 
 
 
 (def  data
   (->
-   (ds/dataset "train.csv" {:key-fn keyword})
+   (tc/dataset "train.csv" {:key-fn keyword})
    preprocess))
 
 
-(def data-split
-  (ds/train-test-split data))
 
-(arrow/dataset->stream! (:train-ds data-split) "train.arrow")
-(arrow/dataset->stream! (:test-ds data-split) "test.arrow")
+(def data-split
+  (first (tc/split->seq data :holdout {:seed 12345})))
+
+(arrow/dataset->stream! (:train data-split) "train.arrow")
+(arrow/dataset->stream! (:test data-split) "test.arrow")
 
 (shutdown-agents)
 ;; (System/exit 0)
