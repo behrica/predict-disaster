@@ -39,8 +39,8 @@ stages:
     cmd: clj preprocess.clj
     deps:
     - path: preprocess.clj
-      md5: 5a9f379bdfdcde331b00b3e32a666773
-      size: 896
+      md5: 2680e39f86e646fde610b8f3af568e06
+      size: 919
     - path: test.csv
       md5: ff248529f207ea164d73636e5b1b251d
       size: 420783
@@ -49,11 +49,11 @@ stages:
       size: 987712
     outs:
     - path: test.arrow
-      md5: ee2ae1505e460c0b742ec8e55391e9be
-      size: 260866
+      md5: 044e70620365604959786ba2aebc9f96
+      size: 428426
     - path: train.arrow
-      md5: d1efd6a108fafe09a504157481d516a1
-      size: 1014522
+      md5: e17a0868efa512c21e2a8cc90da78b7d
+      size: 849786
   predict_kaggle:
     cmd: clj predict_kaggle.clj
     deps:
