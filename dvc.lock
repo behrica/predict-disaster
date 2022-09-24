@@ -14,18 +14,19 @@ stages:
       size: 1098
     params:
       params.yaml:
-        train.model_name: roberta-base
-        train.model_type: roberta
+        train.model_name: google/electra-base-discriminator
+        train.model_type: electra
         train.num_train_epochs: 5
-        train.train_batch_size: 16
+        train.sliding_window: true
+        train.train_batch_size: 32
     outs:
     - path: eval.json
-      md5: de6777d0ca1303a3d9e5ed7b860473f0
+      md5: fe5dd8e0949299c8b38c49a6e2a60681
       size: 37
     - path: outputs
-      md5: 30bbfe6b0ec852976423bfda8c834494.dir
-      size: 5000008256
-      nfiles: 48
+      md5: 767fb7a72680c91406724179f1d612f5.dir
+      size: 7013678578
+      nfiles: 65
   preprcess:
     cmd: clj preprocess.clj
     outs:
@@ -58,13 +59,13 @@ stages:
     cmd: clj -X predict_kaggle/predict-kaggle
     deps:
     - path: outputs
-      md5: 30bbfe6b0ec852976423bfda8c834494.dir
-      size: 5000008256
-      nfiles: 48
+      md5: 767fb7a72680c91406724179f1d612f5.dir
+      size: 7013678578
+      nfiles: 65
     - path: src/predict_kaggle.clj
       md5: 2d59ca93f09400b734643a780d8983ec
       size: 1207
     outs:
     - path: kaggle_submission.csv
-      md5: 6c752a4805d74c613f69927f966dbd27
+      md5: d70882f55c2e4416dcb968520c60183a
       size: 22746

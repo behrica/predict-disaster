@@ -25,6 +25,7 @@ stages:
       - train.model_type
       - train.model_name
       - train.train_batch_size
+      - train.sliding_window
 
 
   predict_kaggle:
