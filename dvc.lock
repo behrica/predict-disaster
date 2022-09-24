@@ -36,11 +36,11 @@ stages:
       md5: d927714523a1e5bd60c8940199158497
       size: 578642
   preprocess:
-    cmd: clj preprocess.clj
+    cmd: clj -X preprocess/do-preprocess
     deps:
-    - path: preprocess.clj
-      md5: 2680e39f86e646fde610b8f3af568e06
-      size: 919
+    - path: src/preprocess.clj
+      md5: 1e2419c2ac24cc837caa23c19f832dac
+      size: 954
     - path: test.csv
       md5: ff248529f207ea164d73636e5b1b251d
       size: 420783
@@ -55,15 +55,15 @@ stages:
       md5: e17a0868efa512c21e2a8cc90da78b7d
       size: 849786
   predict_kaggle:
-    cmd: clj predict_kaggle.clj
+    cmd: clj -X predict_kaggle/predict-kaggle
     deps:
     - path: outputs
       md5: 30bbfe6b0ec852976423bfda8c834494.dir
       size: 5000008256
       nfiles: 48
-    - path: predict_kaggle.clj
-      md5: 3eeead5788f6ee58379cb3a196e71878
-      size: 1516
+    - path: src/predict_kaggle.clj
+      md5: 2d59ca93f09400b734643a780d8983ec
+      size: 1207
     outs:
     - path: kaggle_submission.csv
       md5: 6c752a4805d74c613f69927f966dbd27
