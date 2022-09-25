@@ -18,15 +18,13 @@
 (def model-args
   (merge
 
-   {;; "use_multiprocessing" false
-    ;; "process_count" 1
-    "use_cuda" true
-    "use_early_stopping" true
-    "save_eval_checkpoints" true
-    ;; "evaluate_during_training_steps" 50
-    "evaluate_during_training" true
-    "evaluate_during_training_silent" false
-    "evaluate_during_training_verbose" true}
+   {:use_cuda true
+    :use_early_stopping true
+    :save_eval_checkpoints false
+    :evaluate_during_training_steps 100
+    :evaluate_during_training true
+    :evaluate_during_training_silent false
+    :evaluate_during_training_verbose true}
    params))
 
 
@@ -55,11 +53,10 @@
     (tc/rows :as-seqs))))
 
 (def model ((py.- st ClassificationModel)
-            "bert" "prajjwal1/bert-tiny"
-
-             ;; (:model_type model-args)
-             ;; (:model_name model-args)
-            :use_cuda true
+            ;; "bert" "prajjwal1/bert-tiny"
+            (:model_type model-args)
+            (:model_name model-args)
+            :use_cuda (:use_cuda model-args)
             :args model-args))
 
 (def train-result  (py. model train_model pd-train :eval_df pd-eval))

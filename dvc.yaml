@@ -11,7 +11,7 @@ stages:
 
 
   train:
-    cmd: python train.py
+    cmd: clojure src/train.py
     deps:
       - train.py
       - train.arrow

@@ -10,8 +10,8 @@
             [tech.v3.libs.arrow :as arrow]))
 
 (require-python '[simpletransformers.classification
-                  :as classification :reload])
-(require-python '[pandas :as pd :reload])
+                  :as classification])
+(require-python '[pandas :as pd])
 
 (defn predict-kaggle [_]
   (let [params
@@ -41,3 +41,6 @@
           (ds/add-column :target prediction)
           (ds/select-columns [:id :target])
           (ds/write-csv! "kaggle_submission.csv"))))
+
+
+(comment (predict-kaggle nil))

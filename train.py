@@ -14,7 +14,7 @@ model_args =  {"use_cuda": True,
                "use_early_stopping": True,
                "save_eval_checkpoints": False,
                "evaluate_during_training_steps": 100,
-               "evaluate_during_training": True,
+                "evaluate_during_training": True,
                "evaluate_during_training_silent": False,
                "evaluate_during_training_verbose": True} | params['train']
 
