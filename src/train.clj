@@ -29,7 +29,11 @@
 (def model-args
   (merge
 
-   {:use_cuda true
+   {:use_multiprocessing false
+    :use_multiprocessing_for_evaluation false
+    :process_count 1
+
+    :use_cuda true
     :use_early_stopping true
     :save_eval_checkpoints false
     :evaluate_during_training_steps 100
