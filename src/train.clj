@@ -5,17 +5,20 @@
    [clj-yaml.core :as yaml]
    [tablecloth.api :as tc]
    [preprocess :refer [preprocess]]
+
    [tech.v3.libs.arrow :as arrow]
    [libpython-clj2.python.ffi :as ffi]
-   [libpython-clj2.embedded :as embedded]
-   [libpython-clj2.python.gc :as gc]))
+   [libpython-clj2.python :refer [py.- py.] :as py]))
+   
 
+   
 
 
 (println "-------- manual-gil: " ffi/manual-gil)
 ;; (embedded/initialize!)
 
-(def locked (ffi/lock-gil))
+
+
 
 (def params
   (->
@@ -35,50 +38,69 @@
     :evaluate_during_training_verbose true}
    params))
 
+(println :gil-locked)
+(def locked (ffi/lock-gil))
 
-(require
-         '[libpython-clj2.python :refer [py.- py.] :as py])
 
 ;; (py/initialize! :no-io-redirect? true)
 
-(def pd (py/import-module "pandas"))
-(def st (py/import-module "simpletransformers.classification"))
+(println :import-python-libs)
+(require
+  '[libpython-clj2.require :as py-req])
+(py-req/require-python '[pandas :as pd])
+(py-req/require-python '[simpletransformers.classification :as st])
+;; (def pd (py/import-module "pandas"))
+;; (def st (py/import-module "simpletransformers.classification"))
+
+(println :python-libs-imported)
 
 (def pd-train
-  ((py/py.- pd DataFrame)
+
    (->
     (arrow/stream->dataset "train.arrow" {:key-fn keyword})
     (tc/select-columns [:text :labels])
     ;; (tc/head 102)
-    (tc/rows :as-seqs))))
+    (tc/rows :as-seqs)
+    (pd/DataFrame)))
 
 (def pd-eval
-  ((py/py.- pd DataFrame)
-   (->
-    (arrow/stream->dataset "test.arrow" {:key-fn keyword})
-    (tc/select-columns [:text :labels])
-    ;; (tc/head 157)
-    (tc/rows :as-seqs))))
 
-(def model ((py.- st ClassificationModel)
+  (->
+   (arrow/stream->dataset "test.arrow" {:key-fn keyword})
+   (tc/select-columns [:text :labels])
+   ;; (tc/head 157)
+   (tc/rows :as-seqs)
+   (pd/DataFrame)))
+
+
+(println :datasets-imported)
+
+(def model (st/ClassificationModel
             ;; "bert" "prajjwal1/bert-tiny"
             (:model_type model-args)
             (:model_name model-args)
             :use_cuda (:use_cuda model-args)
             :args model-args))
 
+
+(println :model-created)
 (def train-result  (py. model train_model pd-train :eval_df pd-eval))
+
+
+(println :model-trained)
 
 (def eval-result
   (->
    (py. model eval_model pd-eval)
    (py/->jvm)))
 
-(spit "eval.json"
- (json/write-str
-  {:train
+(println :evaluation-done)
 
-   (-> eval-result first (select-keys ["mcc"]))}))
+(spit "eval.json"
+      (json/write-str
+       {:train
+
+        (-> eval-result first (select-keys ["mcc"]))}))
 
 
 (println "training finished")
