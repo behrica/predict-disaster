@@ -19,17 +19,17 @@ stages:
       params.yaml:
         train.model_name: google/electra-base-discriminator
         train.model_type: electra
-        train.num_train_epochs: 2
+        train.num_train_epochs: 3
         train.sliding_window: true
         train.train_batch_size: 32
     outs:
     - path: eval.json
-      md5: 651cce6a9f7d5dff9916f1cc6b8197b1
+      md5: d2ad4fa7f101fad85d2485e0d54dfb51
       size: 36
     - path: outputs
-      md5: d90d72cb9686e861b0e653d1838261ce.dir
-      size: 4383938355
-      nfiles: 43
+      md5: bc06e30335217c60c314ed60fc543281.dir
+      size: 5698932186
+      nfiles: 54
   preprcess:
     cmd: clj preprocess.clj
     outs:
@@ -68,13 +68,13 @@ stages:
       md5: a8988916bdfeb9beceaef26bebbd5227
       size: 454
     - path: outputs
-      md5: d90d72cb9686e861b0e653d1838261ce.dir
-      size: 4383938355
-      nfiles: 43
+      md5: bc06e30335217c60c314ed60fc543281.dir
+      size: 5698932186
+      nfiles: 54
     - path: src/predict_kaggle.clj
       md5: c1278d90c31ee86386a79ca2b733c47b
       size: 1224
     outs:
     - path: kaggle_submission.csv
-      md5: d8f6b1fe31ae1afdf1e4ee1fc784e24e
+      md5: 4e27dd34a8299fd74d90224facf2d5f5
       size: 22746
