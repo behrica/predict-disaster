@@ -5,9 +5,17 @@
    [clj-yaml.core :as yaml]
    [tablecloth.api :as tc]
    [preprocess :refer [preprocess]]
-   [tech.v3.libs.arrow :as arrow]))
-   
+   [tech.v3.libs.arrow :as arrow]
+   [libpython-clj2.python.ffi :as ffi]
+   [libpython-clj2.embedded :as embedded]
+   [libpython-clj2.python.gc :as gc]))
 
+
+
+(println "-------- manual-gil: " ffi/manual-gil)
+;; (embedded/initialize!)
+
+(def locked (ffi/lock-gil))
 
 (def params
   (->
@@ -31,7 +39,7 @@
 (require
          '[libpython-clj2.python :refer [py.- py.] :as py])
 
-(py/initialize! :no-io-redirect? true)
+;; (py/initialize! :no-io-redirect? true)
 
 (def pd (py/import-module "pandas"))
 (def st (py/import-module "simpletransformers.classification"))
@@ -72,7 +80,8 @@
 
    (-> eval-result first (select-keys ["mcc"]))}))
 
+
 (println "training finished")
-(shutdown-agents)
 
-
+(println :unlock-gil)
+(ffi/unlock-gil locked)

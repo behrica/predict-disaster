@@ -3,6 +3,7 @@ stages:
     cmd: clj -X preprocess/do-preprocess
     deps:
       - src/preprocess.clj
+      - deps.edn
       - train.csv
       - test.csv
     outs:
@@ -11,9 +12,10 @@ stages:
 
 
   train:
-    cmd: clojure src/train.py
+    cmd: ./train.sh
     deps:
-      - train.py
+      - src/train.clj
+      - deps.edn
       - train.arrow
       - test.arrow
     outs:
@@ -31,6 +33,7 @@ stages:
   predict_kaggle:
      cmd: clj -X predict_kaggle/predict-kaggle
      deps:
+       - deps.edn
        - outputs
        - src/predict_kaggle.clj
      outs:

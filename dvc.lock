@@ -1,17 +1,20 @@
 schema: '2.0'
 stages:
   train:
-    cmd: python train.py
+    cmd: ./train.sh
     deps:
+    - path: deps.edn
+      md5: a8988916bdfeb9beceaef26bebbd5227
+      size: 454
+    - path: src/train.clj
+      md5: 6ea08560368bb54e3b36e052c596d0a9
+      size: 2198
     - path: test.arrow
       md5: 044e70620365604959786ba2aebc9f96
       size: 428426
     - path: train.arrow
       md5: e17a0868efa512c21e2a8cc90da78b7d
       size: 849786
-    - path: train.py
-      md5: 548d0707159d3aa5ac2269ac21496d81
-      size: 1098
     params:
       params.yaml:
         train.model_name: google/electra-base-discriminator
@@ -21,11 +24,11 @@ stages:
         train.train_batch_size: 32
     outs:
     - path: eval.json
-      md5: fe5dd8e0949299c8b38c49a6e2a60681
-      size: 37
+      md5: cab51f5002128960d59a2c222a063db2
+      size: 36
     - path: outputs
-      md5: 767fb7a72680c91406724179f1d612f5.dir
-      size: 7013678578
+      md5: 6c64ebe5ac8bcd495a111339aec90335.dir
+      size: 7013678606
       nfiles: 65
   preprcess:
     cmd: clj preprocess.clj
@@ -39,6 +42,9 @@ stages:
   preprocess:
     cmd: clj -X preprocess/do-preprocess
     deps:
+    - path: deps.edn
+      md5: a8988916bdfeb9beceaef26bebbd5227
+      size: 454
     - path: src/preprocess.clj
       md5: 1e2419c2ac24cc837caa23c19f832dac
       size: 954
@@ -58,14 +64,17 @@ stages:
   predict_kaggle:
     cmd: clj -X predict_kaggle/predict-kaggle
     deps:
+    - path: deps.edn
+      md5: a8988916bdfeb9beceaef26bebbd5227
+      size: 454
     - path: outputs
-      md5: 767fb7a72680c91406724179f1d612f5.dir
-      size: 7013678578
+      md5: 6c64ebe5ac8bcd495a111339aec90335.dir
+      size: 7013678606
       nfiles: 65
     - path: src/predict_kaggle.clj
-      md5: 2d59ca93f09400b734643a780d8983ec
-      size: 1207
+      md5: c1278d90c31ee86386a79ca2b733c47b
+      size: 1224
     outs:
     - path: kaggle_submission.csv
-      md5: d70882f55c2e4416dcb968520c60183a
+      md5: 181d61306ec5391e6f766c9aeb64d411
       size: 22746
