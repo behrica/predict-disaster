@@ -1,6 +1,6 @@
 stages:
   preprocess:
-    cmd: clj -X preprocess/do-preprocess
+    cmd: clojure -X preprocess/do-preprocess
     deps:
       - src/preprocess.clj
       - deps.edn
@@ -31,7 +31,7 @@ stages:
 
 
   predict_kaggle:
-     cmd: clj -X predict_kaggle/predict-kaggle
+     cmd: clojure -X predict_kaggle/predict-kaggle
      deps:
        - deps.edn
        - outputs

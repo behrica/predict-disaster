@@ -1,5 +1,5 @@
 train:
-  num_train_epochs: 5
+  num_train_epochs: 3
   model_type: "electra"
   model_name: "google/electra-base-discriminator"
   train_batch_size: 32

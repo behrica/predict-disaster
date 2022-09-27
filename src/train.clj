@@ -15,7 +15,7 @@
 
 
 (println "-------- manual-gil: " ffi/manual-gil)
-(py/initialize!)
+;(py/initialize!)
 
 
 
@@ -36,10 +36,11 @@
     :use_cuda true
     :use_early_stopping true
     :save_eval_checkpoints false
-    :evaluate_during_training_steps 100
+    ;:evaluate_during_training_steps 100
     :evaluate_during_training true
-    :evaluate_during_training_silent false
-    :evaluate_during_training_verbose true}
+    :evaluate_during_training_silent true
+    ;:evaluate_during_training_verbose true
+  }
    params))
 
 (def locked (ffi/lock-gil))
@@ -59,7 +60,7 @@
    (->
     (arrow/stream->dataset "train.arrow" {:key-fn keyword})
     (tc/select-columns [:text :labels])
-    (tc/head 102)
+    ;(tc/head 102)
     (tc/rows :as-seqs)
     (pd/DataFrame)))
 
@@ -68,7 +69,7 @@
   (->
    (arrow/stream->dataset "test.arrow" {:key-fn keyword})
    (tc/select-columns [:text :labels])
-   (tc/head 157)
+   ;(tc/head 157)
    (tc/rows :as-seqs)
    (pd/DataFrame)))
 
