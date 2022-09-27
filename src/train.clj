@@ -15,7 +15,7 @@
 
 
 (println "-------- manual-gil: " ffi/manual-gil)
-;; (embedded/initialize!)
+(py/initialize!)
 
 
 
@@ -38,19 +38,15 @@
     :evaluate_during_training_verbose true}
    params))
 
-(println :gil-locked)
 (def locked (ffi/lock-gil))
+(println :gil-locked)
 
-
-;; (py/initialize! :no-io-redirect? true)
 
 (println :import-python-libs)
 (require
   '[libpython-clj2.require :as py-req])
 (py-req/require-python '[pandas :as pd])
 (py-req/require-python '[simpletransformers.classification :as st])
-;; (def pd (py/import-module "pandas"))
-;; (def st (py/import-module "simpletransformers.classification"))
 
 (println :python-libs-imported)
 
@@ -59,7 +55,7 @@
    (->
     (arrow/stream->dataset "train.arrow" {:key-fn keyword})
     (tc/select-columns [:text :labels])
-    ;; (tc/head 102)
+    (tc/head 102)
     (tc/rows :as-seqs)
     (pd/DataFrame)))
 
@@ -68,7 +64,7 @@
   (->
    (arrow/stream->dataset "test.arrow" {:key-fn keyword})
    (tc/select-columns [:text :labels])
-   ;; (tc/head 157)
+   (tc/head 157)
    (tc/rows :as-seqs)
    (pd/DataFrame)))
 
