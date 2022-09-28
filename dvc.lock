@@ -4,11 +4,11 @@ stages:
     cmd: ./train.sh
     deps:
     - path: deps.edn
-      md5: a8988916bdfeb9beceaef26bebbd5227
-      size: 454
+      md5: a3dccaca39d5a2295621ef202f0fb1cf
+      size: 631
     - path: src/train.clj
-      md5: 6ea08560368bb54e3b36e052c596d0a9
-      size: 2198
+      md5: d3401b7128c5db6b4d3601432150025f
+      size: 2218
     - path: test.arrow
       md5: 044e70620365604959786ba2aebc9f96
       size: 428426
@@ -24,12 +24,12 @@ stages:
         train.train_batch_size: 32
     outs:
     - path: eval.json
-      md5: cab51f5002128960d59a2c222a063db2
-      size: 36
+      md5: 70a36937c7a5f15c217cc2dcf93590cc
+      size: 37
     - path: outputs
-      md5: 6c64ebe5ac8bcd495a111339aec90335.dir
-      size: 7013678606
-      nfiles: 65
+      md5: 74cbeb1aa325b751278a5af354605658.dir
+      size: 125761788
+      nfiles: 32
   preprcess:
     cmd: clj preprocess.clj
     outs:
@@ -43,8 +43,8 @@ stages:
     cmd: clj -X preprocess/do-preprocess
     deps:
     - path: deps.edn
-      md5: a8988916bdfeb9beceaef26bebbd5227
-      size: 454
+      md5: a3dccaca39d5a2295621ef202f0fb1cf
+      size: 631
     - path: src/preprocess.clj
       md5: 1e2419c2ac24cc837caa23c19f832dac
       size: 954
@@ -65,16 +65,16 @@ stages:
     cmd: clj -X predict_kaggle/predict-kaggle
     deps:
     - path: deps.edn
-      md5: a8988916bdfeb9beceaef26bebbd5227
-      size: 454
+      md5: a3dccaca39d5a2295621ef202f0fb1cf
+      size: 631
     - path: outputs
-      md5: 6c64ebe5ac8bcd495a111339aec90335.dir
-      size: 7013678606
-      nfiles: 65
+      md5: 74cbeb1aa325b751278a5af354605658.dir
+      size: 125761788
+      nfiles: 32
     - path: src/predict_kaggle.clj
       md5: c1278d90c31ee86386a79ca2b733c47b
       size: 1224
     outs:
     - path: kaggle_submission.csv
-      md5: 181d61306ec5391e6f766c9aeb64d411
+      md5: e07af9cfb75c09d368437c2c1c7900e9
       size: 22746

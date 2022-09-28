@@ -5,8 +5,11 @@
    [clj-yaml.core :as yaml]
    [tablecloth.api :as tc]
    [preprocess :refer [preprocess]]
-
+   [scicloj.ml.core :as ml]
+   [scicloj.ml.metamorph :as mm]
    [tech.v3.libs.arrow :as arrow]
+   [simpletransformers]
+   [confuse.binary-class-metrics :as confuse]
    [libpython-clj2.python.ffi :as ffi]
    [libpython-clj2.python :refer [py.- py.] :as py]))
    
@@ -15,9 +18,7 @@
 
 
 (println "-------- manual-gil: " ffi/manual-gil)
-;; (embedded/initialize!)
-
-
+(py/initialize!)
 
 
 (def params
@@ -35,11 +36,11 @@
 
     :use_cuda true
     :use_early_stopping true
-    :save_eval_checkpoints false
+    :save_eval_checkpoints true
     :evaluate_during_training_steps 100
     :evaluate_during_training true
     :evaluate_during_training_silent false
-    :evaluate_during_training_verbose true}
+    :evaluate_during_training_verbose false}
    params))
 
 (println :gil-locked)
@@ -49,62 +50,61 @@
 ;; (py/initialize! :no-io-redirect? true)
 
 (println :import-python-libs)
-(require
-  '[libpython-clj2.require :as py-req])
-(py-req/require-python '[pandas :as pd])
-(py-req/require-python '[simpletransformers.classification :as st])
-;; (def pd (py/import-module "pandas"))
-;; (def st (py/import-module "simpletransformers.classification"))
-
-(println :python-libs-imported)
 
 (def pd-train
-
    (->
     (arrow/stream->dataset "train.arrow" {:key-fn keyword})
-    (tc/select-columns [:text :labels])
-    ;; (tc/head 102)
-    (tc/rows :as-seqs)
-    (pd/DataFrame)))
+    (tc/select-columns [:text :labels])))
+
 
 (def pd-eval
-
   (->
    (arrow/stream->dataset "test.arrow" {:key-fn keyword})
-   (tc/select-columns [:text :labels])
-   ;; (tc/head 157)
-   (tc/rows :as-seqs)
-   (pd/DataFrame)))
+   (tc/select-columns [:text :labels])))
 
 
 (println :datasets-imported)
 
-(def model (st/ClassificationModel
-            ;; "bert" "prajjwal1/bert-tiny"
-            (:model_type model-args)
-            (:model_name model-args)
-            :use_cuda (:use_cuda model-args)
-            :args model-args))
+(def pipe (ml/pipeline
+           (mm/set-inference-target [:labels])
+           (mm/model {:model-type :simpletransformers/classification
+                      :model-args model-args
+                      :eval_df pd-eval})))
 
 
-(println :model-created)
-(def train-result  (py. model train_model pd-train :eval_df pd-eval))
+(def ctx-fit
+  (ml/fit-pipe
+   pd-train
+   pipe))
+
+   
+(def ctx-tf
+  (ml/transform-pipe pd-eval pipe ctx-fit))
 
 
-(println :model-trained)
 
-(def eval-result
-  (->
-   (py. model eval_model pd-eval)
-   (py/->jvm)))
 
-(println :evaluation-done)
+(def actual (:labels pd-eval))
+(def predicted (-> ctx-tf :metamorph/data :labels))
+
+(def mcc (confuse/mcc actual predicted 1))
+
+
+
+;; (def eval-result
+;;   (->
+;;    (py. model eval_model pd-eval)
+;;    (py/->jvm)))
+
+;; (println :evaluation-done)
 
 (spit "eval.json"
-      (json/write-str
-       {:train
+      
+     (json/write-str
+      {:train {:mcc mcc}}))
 
-        (-> eval-result first (select-keys ["mcc"]))}))
+
+
 
 
 (println "training finished")
