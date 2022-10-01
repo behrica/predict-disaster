@@ -1,5 +1,7 @@
 {:deps {scicloj/scicloj.ml              {:mvn/version "0.2.1"}
-        clj-python/libpython-clj        {:mvn/version "2.019"}
+        clj-python/libpython-clj        { ;; :mvn/version "2.019"
+                                         :local/root "../libpython-clj/"}
+
         datacraft-sciences/confuse      {:git/url "https://github.com/behrica/confuse.git"
                                          :sha "d517671d77a093779f853843e78f323740a568a7"}
 

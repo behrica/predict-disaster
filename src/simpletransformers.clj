@@ -2,53 +2,45 @@
   (:require
    [scicloj.metamorph.ml :as ml]
    [tablecloth.api :as tc]
+   [libpython-clj2.python.ffi :as ffi]
    [libpython-clj2.python :refer [py.- py.] :as py]))
-
-
-
-;; (py/initialize!)
-
-;; (py/with-gil
-
-;;   (py-req/require-python '[pandas :as pd])
-;;   (py-req/require-python '[ :as st]))
-
-
 
 
 (defn- train
   [feature-ds label-ds options]
-  ;; (clojure.pprint/pprint options)
-  (py/with-gil
+
+  (let [
+        model-args (:model-args options)
+        _ (clojure.pprint/pprint model-args)
+        pd (py/import-module "pandas")
+        st (py/import-module "simpletransformers.classification")
+
+        pd-train
+        (-> feature-ds
+            (tc/append label-ds)
+            (tc/rows :as-seqs)
+            ((py/py.- pd DataFrame)))
+
+        eval-df
+        (-> (:eval_df options)
+            (tc/rows :as-seqs)
+            ((py/py.- pd DataFrame)))
+
+        model
+        ( (py/py.- st ClassificationModel)
+         (:model_type model-args)
+         (:model_name model-args)
+
+         :use_cuda (:use_cuda model-args)
+         :args model-args)]
+    (py/->jvm
+     (py. model train_model pd-train :eval_df eval-df))))
+      
 
 
 
-    (let [
-          model-args (:model-args options)
-          _ (clojure.pprint/pprint model-args)
-          pd (py/import-module "pandas")
-          st (py/import-module "simpletransformers.classification")
 
-          pd-train
-          (-> feature-ds
-              (tc/append label-ds)
-              (tc/rows :as-seqs)
-              ((py/py.- pd DataFrame)))
-
-          eval-df
-          (-> (:eval_df options)
-              (tc/rows :as-seqs)
-              ((py/py.- pd DataFrame)))
-
-          model
-          ( (py/py.- st ClassificationModel)
-           (:model_type model-args)
-           (:model_name model-args)
-
-           :use_cuda (:use_cuda model-args)
-           :args model-args)]
-      (py/->jvm
-       (py. model train_model pd-train :eval_df eval-df)))))
+    
 
 
    
@@ -65,7 +57,7 @@
           st (py/import-module "simpletransformers.classification")
           model
           ( (py/py.- st ClassificationModel)
-           "bert" "outputs/best_model"
+           "electra" "outputs/best_model"
            :use_cuda true)]
       (->> (py. model predict (py/->py-list (get feature-ds :text)))
            (py/->jvm)
