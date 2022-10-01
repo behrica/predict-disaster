@@ -32,10 +32,12 @@
     :use_multiprocessing_for_evaluation false
     :process_count 1
     :use_cuda true
+
     :use_early_stopping true
     :early_stopping_consider_epochs true
+
     :save_eval_checkpoints true
-    :evaluate_during_training_steps 200
+    :evaluate_during_training_steps 100
     :evaluate_during_training true
     :evaluate_during_training_silent false
     :evaluate_during_training_verbose false}

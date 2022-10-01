@@ -7,8 +7,8 @@ stages:
       md5: 5376fdd6b6eaf456fa30def8f71910d2
       size: 709
     - path: src/train.clj
-      md5: 8326f3e086423cb249543eee2b58b6ae
-      size: 2302
+      md5: 101c65458c21ffa98a68afc664536ecd
+      size: 2127
     - path: test.arrow
       md5: 044e70620365604959786ba2aebc9f96
       size: 428426
@@ -24,12 +24,12 @@ stages:
         train.train_batch_size: 32
     outs:
     - path: eval.json
-      md5: b6a6820cd4646b6213ebd317c0155956
+      md5: b9ca6d1da2a20c32fa4da533c6ec742d
       size: 36
     - path: outputs
-      md5: bc14de81dc20a57677dc59174bfe42dc.dir
-      size: 12273454982
-      nfiles: 109
+      md5: 778a89c062efcbccddeb2a25196601c9.dir
+      size: 13588399067
+      nfiles: 120
   preprcess:
     cmd: clj preprocess.clj
     outs:
@@ -68,13 +68,13 @@ stages:
       md5: 5376fdd6b6eaf456fa30def8f71910d2
       size: 709
     - path: outputs
-      md5: bc14de81dc20a57677dc59174bfe42dc.dir
-      size: 12273454982
-      nfiles: 109
+      md5: 778a89c062efcbccddeb2a25196601c9.dir
+      size: 13588399067
+      nfiles: 120
     - path: src/predict_kaggle.clj
       md5: c1278d90c31ee86386a79ca2b733c47b
       size: 1224
     outs:
     - path: kaggle_submission.csv
-      md5: 895a8dbf59b93f9fa5369c74b52e1d7d
+      md5: b81d699e2ae3cecc4b7966a0f37a9a3b
       size: 22746
