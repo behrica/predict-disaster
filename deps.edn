@@ -1,6 +1,8 @@
 {:deps {scicloj/scicloj.ml              {:mvn/version "0.2.1"}
-        clj-python/libpython-clj        { ;; :mvn/version "2.019"
-                                         :local/root "../libpython-clj/"}
+        clj-python/libpython-clj        {:mvn/version "2.019"}
+        io.github.nextjournal/clerk     {:mvn/version "0.10.562"}
+        ;; :local/root "../libpython-clj/"
+
 
         datacraft-sciences/confuse      {:git/url "https://github.com/behrica/confuse.git"
                                          :sha "d517671d77a093779f853843e78f323740a568a7"}
@@ -9,4 +11,7 @@
         org.lz4/lz4-java                {:mvn/version "1.8.0"}
         net.java.dev.jna/jna            {:mvn/version  "5.10.0"}
         com.github.luben/zstd-jni       {:mvn/version "1.5.1-1"}
-        clj-commons/clj-yaml            {:mvn/version "0.7.109"}}}
+        clj-commons/clj-yaml            {:mvn/version "0.7.109"}}
+ :aliases
+ {:dev {:extra-paths ["dev"]}}}
+        ;; :extra-deps { org.scicloj/clay {:mvn/version "1-alpha15"}}
