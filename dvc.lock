@@ -43,8 +43,8 @@ stages:
     cmd: clj -X preprocess/do-preprocess
     deps:
     - path: deps.edn
-      md5: 5376fdd6b6eaf456fa30def8f71910d2
-      size: 709
+      md5: 8c096762cb1f79f703a0d5c926077b9e
+      size: 853
     - path: src/preprocess.clj
       md5: 1e2419c2ac24cc837caa23c19f832dac
       size: 954
