@@ -8,15 +8,16 @@
    [simpletransformers]
    [scicloj.ml.core :as ml]
    [scicloj.ml.metamorph :as mm]
+   [scicloj.ml.smile.nlp :as nlp]
    [tech.v3.libs.arrow :as arrow]
-   [confuse.binary-class-metrics :as confuse]
-   [libpython-clj2.python.ffi :as ffi]
-   [libpython-clj2.python :refer [py.- py.] :as py]))
+   [clojure.core.matrix.impl.pprint :as m-pprint]
+   [confuse.multi-class-metrics :as confuse-mcm]
+   [confuse.binary-class-metrics :as confuse-bcm]))
+
+
+   
    
 ;; (py/initialize!)
-(println "-------- manual-gil: " ffi/manual-gil)
-(println :lock-gil)
-(def locked (ffi/lock-gil))
 
 
 (def params
@@ -24,27 +25,6 @@
    (slurp "params.yaml")
    (yaml/parse-string)
    :train))
-
-(def model-args
-  (merge
-
-   {:use_multiprocessing false
-    :use_multiprocessing_for_evaluation false
-    :process_count 1
-    :use_cuda true
-
-    :use_early_stopping true
-    :early_stopping_consider_epochs true
-
-    :save_eval_checkpoints true
-    :evaluate_during_training_steps 100
-    :evaluate_during_training true
-    :evaluate_during_training_silent false
-    :evaluate_during_training_verbose false}
-   params))
-
-
-
 
 (def pd-train
    (->
@@ -58,38 +38,82 @@
    (arrow/stream->dataset "test.arrow" {:key-fn keyword})
    (tc/select-columns [:text :labels])))
 
-(println :datasets-imported)
-
-(try
-  (let [pipe (ml/pipeline
-              (mm/set-inference-target [:labels])
-              (mm/model {:model-type :simpletransformers/classification
-                         :model-args model-args
-                         :eval_df pd-eval}))
-
-        _ (println :run-fit)
-        ctx-fit
-        (ml/fit-pipe
-         pd-train
-         pipe)
 
 
-        _ (println :run-transform)
-        ctx-tf
-        (ml/transform-pipe pd-eval pipe ctx-fit)
+(defn my-text->bow [text options]
+  (let [bow (nlp/default-text->bow text options)]
+    (def bow bow)
+    (->> bow
+         (remove (fn [[term freq]]
+                   (<  (count term) 3)))
+         (into {}))))
 
 
-        actual (:labels pd-eval)
-        predicted (-> ctx-tf :metamorph/data :labels)
+(defn features [ds params]
+  (-> ds
+      (nlp/count-vectorize :text :bow {:stopwords :default
+                                       :text->bow-fn my-text->bow})
+      (nlp/bow->tfidf :bow :tfidf {:tf-map-handler-fn
+                                   (partial nlp/tf-map-handler-top-n (:top-n params))})
 
-        mcc (confuse/mcc actual predicted 1)]
+      (nlp/tfidf->dense-array :tfidf :dense)
+      (tc/drop-columns [:text])
+      (tc/separate-column :dense (fn [array]
 
-    (spit "eval.json"
+                                  (zipmap
+                                   (map #(str "c-" %) (range (count array)))
 
-          (json/write-str
-           {:train {:mcc mcc}})))
-  (println "training finished")
+                                   array)))))
 
-  (finally (do
-             (println :unlock-gil)
-             (ffi/unlock-gil locked))))
+(def data (tc/concat pd-train pd-eval))
+
+(def data+features
+  (-> data
+   (tc/select-columns [:labels])
+   (ds/categorical->number [:labels] [[0 0.0] [1 1.0]])
+   (tc/append (features data params))))
+
+
+(def train-ds
+  (tc/head data+features (tc/row-count pd-train)))
+
+
+(def eval-ds
+  (tc/tail data+features (tc/row-count pd-eval)))
+
+  
+
+(let [pipe (ml/pipeline
+            (mm/set-inference-target [:labels])
+            (mm/model {:model-type :smile.classification/logistic-regression}))
+
+      ctx-fit
+      (ml/fit-pipe
+       train-ds
+       pipe)
+
+
+      ctx-tf
+      (ml/transform-pipe eval-ds pipe ctx-fit)
+
+
+      actual (:labels pd-eval)
+      predicted (-> ctx-tf :metamorph/data (ds/column-values->categorical :labels))
+
+      _ (def actual actual)
+      _ (def predicted predicted)
+      mcc (confuse-mcm/multiclass-mcc actual predicted)]
+
+ (->>
+  (m-pprint/pm
+   (->  (confuse-bcm/confusion-matrix actual predicted)
+        (confuse-bcm/confusion-matrix-str)))
+  (spit "validation-cm.txt"))
+
+ (spit "eval.json"
+
+       (json/write-str
+        {:train {:mcc mcc}})))
+
+(println "training finished")
+(shutdown-agents)

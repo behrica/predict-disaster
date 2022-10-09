@@ -2,4 +2,5 @@
   .
   ((cider-clojure-cli-aliases
     .
-    "dev"))))
+    "sc:lib/hotload"
+    ))))

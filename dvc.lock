@@ -4,11 +4,11 @@ stages:
     cmd: ./train.sh
     deps:
     - path: deps.edn
-      md5: 5376fdd6b6eaf456fa30def8f71910d2
-      size: 709
+      md5: e574233f4edab274c56b259fa60550ab
+      size: 821
     - path: src/train.clj
-      md5: b5bd34e963b080ab9171bf1e22480f13
-      size: 2128
+      md5: 9c30a476c2fc61679afe175ef62c4064
+      size: 2777
     - path: test.arrow
       md5: 044e70620365604959786ba2aebc9f96
       size: 428426
@@ -17,19 +17,11 @@ stages:
       size: 849786
     params:
       params.yaml:
-        train.model_name: google/electra-base-discriminator
-        train.model_type: electra
-        train.num_train_epochs: 5
-        train.sliding_window: true
-        train.train_batch_size: 32
+        train.top-n: 2
     outs:
     - path: eval.json
-      md5: 08726b819fc00d473a49b2aff054bf6d
-      size: 36
-    - path: outputs
-      md5: 0c34b090df3bcbaf18b28597a1dc39de.dir
-      size: 17533231925
-      nfiles: 153
+      md5: 4d3c9abc3e8df69be7bc5ba6209839d7
+      size: 21
   preprcess:
     cmd: clj preprocess.clj
     outs:
@@ -43,8 +35,8 @@ stages:
     cmd: clj -X preprocess/do-preprocess
     deps:
     - path: deps.edn
-      md5: 8c096762cb1f79f703a0d5c926077b9e
-      size: 853
+      md5: e574233f4edab274c56b259fa60550ab
+      size: 821
     - path: src/preprocess.clj
       md5: 1e2419c2ac24cc837caa23c19f832dac
       size: 954

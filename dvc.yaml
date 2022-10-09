@@ -18,30 +18,25 @@ stages:
       - deps.edn
       - train.arrow
       - test.arrow
-    outs:
-      - outputs
+    #outs:
     metrics:
       - eval.json
     params:
-      - train.num_train_epochs
-      - train.model_type
-      - train.model_name
-      - train.train_batch_size
-      - train.sliding_window
+      - train.top-n
 
 
-  predict_kaggle:
-     cmd: clj -X predict_kaggle/predict-kaggle
-     deps:
-       - deps.edn
-       - outputs
-       - src/predict_kaggle.clj
-     outs:
-       - kaggle_submission.csv
+  # predict_kaggle:
+  #    cmd: clj -X predict_kaggle/predict-kaggle
+  #    deps:
+  #      - deps.edn
+  #      - outputs
+  #      - src/predict_kaggle.clj
+  #    outs:
+  #      - kaggle_submission.csv
 
-plots:
-  outputs/training_progress_scores.csv:
-    x: global_step
-    y:
-      - train_loss
-      - eval_loss
+# plots:
+#   outputs/training_progress_scores.csv:
+#     x: global_step
+#     y:
+#       - train_loss
+#       - eval_loss

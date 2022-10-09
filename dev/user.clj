@@ -1,4 +1,4 @@
-(ns user)
+;; (ns user)
   ;; (:require [scicloj.clay.v1.api :as clay]
   ;;           [scicloj.clay.v1.tools :as tools]
   ;;           [scicloj.clay.v1.extensions :as extensions]

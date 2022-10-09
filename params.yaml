@@ -1,7 +1,2 @@
 train:
-  num_train_epochs: 5
-  model_type: "electra"
-  model_name: "google/electra-base-discriminator"
-  train_batch_size: 32
-  eval_batch_size: 16
-  sliding_window: true
+  top-n: 2
