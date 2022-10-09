@@ -1,2 +1,2 @@
 train:
-  top-n: 2
+  top-n: 1000

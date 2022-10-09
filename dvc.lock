@@ -17,11 +17,11 @@ stages:
       size: 849786
     params:
       params.yaml:
-        train.top-n: 2
+        train.top-n: 1000
     outs:
     - path: eval.json
-      md5: 4d3c9abc3e8df69be7bc5ba6209839d7
-      size: 21
+      md5: 2b6029f93523288471427c016ec91257
+      size: 36
   preprcess:
     cmd: clj preprocess.clj
     outs:
