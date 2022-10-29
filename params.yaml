@@ -1,7 +1,7 @@
 train:
-  num_train_epochs: 5
-  model_type: "electra"
-  model_name: "google/electra-base-discriminator"
+  num_train_epochs: 1
+  model_type: "bert"
+  model_name: "prajjwal1/bert-tiny"
   train_batch_size: 32
   eval_batch_size: 16
   sliding_window: true

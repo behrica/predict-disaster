@@ -14,19 +14,19 @@ stages:
       size: 1098
     params:
       params.yaml:
-        train.model_name: google/electra-base-discriminator
-        train.model_type: electra
-        train.num_train_epochs: 5
+        train.model_name: prajjwal1/bert-tiny
+        train.model_type: bert
+        train.num_train_epochs: 1
         train.sliding_window: true
         train.train_batch_size: 32
     outs:
     - path: eval.json
-      md5: fe5dd8e0949299c8b38c49a6e2a60681
-      size: 37
+      md5: c300ed665afdef58995707f4217abc63
+      size: 39
     - path: outputs
-      md5: 767fb7a72680c91406724179f1d612f5.dir
-      size: 7013678578
-      nfiles: 65
+      md5: 87f1aa7b358c1eb4d1f12c1d8a3d8a3c.dir
+      size: 125761853
+      nfiles: 32
   preprcess:
     cmd: clj preprocess.clj
     outs:
@@ -37,7 +37,7 @@ stages:
       md5: d927714523a1e5bd60c8940199158497
       size: 578642
   preprocess:
-    cmd: clj -X preprocess/do-preprocess
+    cmd: clj -A:add-foreign -X preprocess/do-preprocess
     deps:
     - path: src/preprocess.clj
       md5: 1e2419c2ac24cc837caa23c19f832dac
@@ -56,16 +56,16 @@ stages:
       md5: e17a0868efa512c21e2a8cc90da78b7d
       size: 849786
   predict_kaggle:
-    cmd: clj -X predict_kaggle/predict-kaggle
+    cmd: clj -A:add-foreign -X predict_kaggle/predict-kaggle
     deps:
     - path: outputs
-      md5: 767fb7a72680c91406724179f1d612f5.dir
-      size: 7013678578
-      nfiles: 65
+      md5: 87f1aa7b358c1eb4d1f12c1d8a3d8a3c.dir
+      size: 125761853
+      nfiles: 32
     - path: src/predict_kaggle.clj
       md5: 2d59ca93f09400b734643a780d8983ec
       size: 1207
     outs:
     - path: kaggle_submission.csv
-      md5: d70882f55c2e4416dcb968520c60183a
+      md5: 3bf4981238b88929668d9714c08f9af9
       size: 22746

@@ -1,6 +1,8 @@
 stages:
+
+
   preprocess:
-    cmd: clj -X preprocess/do-preprocess
+    cmd: clj -A:add-foreign -X preprocess/do-preprocess
     deps:
       - src/preprocess.clj
       - train.csv
@@ -8,6 +10,9 @@ stages:
     outs:
       - train.arrow
       - test.arrow
+
+
+
 
 
   train:
@@ -28,13 +33,19 @@ stages:
       - train.sliding_window
 
 
+
+
+
   predict_kaggle:
-     cmd: clj -X predict_kaggle/predict-kaggle
+     cmd: clj -A:add-foreign -X predict_kaggle/predict-kaggle
      deps:
        - outputs
        - src/predict_kaggle.clj
      outs:
        - kaggle_submission.csv
+
+
+
 
 plots:
   outputs/training_progress_scores.csv:
