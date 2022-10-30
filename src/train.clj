@@ -15,8 +15,8 @@
    
 ;; (py/initialize!)
 (println "-------- manual-gil: " ffi/manual-gil)
-(println :lock-gil)
-(def locked (ffi/lock-gil))
+;; (println :lock-gil)
+;; (def locked (ffi/lock-gil))
 
 
 (def params
@@ -61,35 +61,34 @@
 (println :datasets-imported)
 
 (try
-  (let [pipe (ml/pipeline
-              (mm/set-inference-target [:labels])
-              (mm/model {:model-type :simpletransformers/classification
-                         :model-args model-args
-                         :eval_df pd-eval}))
+  (py/with-manual-gil-stack-rc-context
+    (let [pipe (ml/pipeline
+                (mm/set-inference-target [:labels])
+                (mm/model {:model-type :simpletransformers/classification
+                           :model-args model-args
+                           :eval_df pd-eval}))
 
-        _ (println :run-fit)
-        ctx-fit
-        (ml/fit-pipe
-         pd-train
-         pipe)
-
-
-        _ (println :run-transform)
-        ctx-tf
-        (ml/transform-pipe pd-eval pipe ctx-fit)
+          _ (println :run-fit)
+          ctx-fit
+          (ml/fit-pipe
+           pd-train
+           pipe)
 
 
-        actual (:labels pd-eval)
-        predicted (-> ctx-tf :metamorph/data :labels)
+          _ (println :run-transform)
+          ctx-tf
+          (ml/transform-pipe pd-eval pipe ctx-fit)
 
-        mcc (confuse/mcc actual predicted 1)]
 
-    (spit "eval.json"
+          actual (:labels pd-eval)
+          predicted (-> ctx-tf :metamorph/data :labels)
 
-          (json/write-str
-           {:train {:mcc mcc}})))
-  (println "training finished")
+          mcc (confuse/mcc actual predicted 1)]
 
-  (finally (do
-             (println :unlock-gil)
-             (ffi/unlock-gil locked))))
+      (spit "eval.json"
+
+            (json/write-str
+             {:train {:mcc mcc}}))))
+  (println "training finished"))
+
+  
