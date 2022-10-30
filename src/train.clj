@@ -5,19 +5,18 @@
    [clj-yaml.core :as yaml]
    [tablecloth.api :as tc]
    [preprocess :refer [preprocess]]
-
+   [simpletransformers]
+   [scicloj.ml.core :as ml]
+   [scicloj.ml.metamorph :as mm]
    [tech.v3.libs.arrow :as arrow]
+   [confuse.binary-class-metrics :as confuse]
    [libpython-clj2.python.ffi :as ffi]
    [libpython-clj2.python :refer [py.- py.] :as py]))
    
-
-   
-
-
+;; (py/initialize!)
 (println "-------- manual-gil: " ffi/manual-gil)
-;(py/initialize!)
-
-
+;; (println :lock-gil)
+;; (def locked (ffi/lock-gil))
 
 
 (def params
@@ -32,79 +31,64 @@
    {:use_multiprocessing false
     :use_multiprocessing_for_evaluation false
     :process_count 1
-
     :use_cuda true
+
     :use_early_stopping true
-    :save_eval_checkpoints false
-    ;:evaluate_during_training_steps 100
+    :early_stopping_consider_epochs true
+
+    :save_eval_checkpoints true
+    :evaluate_during_training_steps 100
     :evaluate_during_training true
-    :evaluate_during_training_silent true
-    ;:evaluate_during_training_verbose true
-  }
+    :evaluate_during_training_silent false
+    :evaluate_during_training_verbose false}
    params))
 
-(def locked (ffi/lock-gil))
-(println :gil-locked)
 
 
-(println :import-python-libs)
-(require
-  '[libpython-clj2.require :as py-req])
-(py-req/require-python '[pandas :as pd])
-(py-req/require-python '[simpletransformers.classification :as st])
-
-(println :python-libs-imported)
 
 (def pd-train
-
    (->
     (arrow/stream->dataset "train.arrow" {:key-fn keyword})
-    (tc/select-columns [:text :labels])
-    ;(tc/head 102)
-    (tc/rows :as-seqs)
-    (pd/DataFrame)))
+    (tc/select-columns [:text :labels])))
+
+
 
 (def pd-eval
-
   (->
    (arrow/stream->dataset "test.arrow" {:key-fn keyword})
-   (tc/select-columns [:text :labels])
-   ;(tc/head 157)
-   (tc/rows :as-seqs)
-   (pd/DataFrame)))
-
+   (tc/select-columns [:text :labels])))
 
 (println :datasets-imported)
 
-(def model (st/ClassificationModel
-            ;; "bert" "prajjwal1/bert-tiny"
-            (:model_type model-args)
-            (:model_name model-args)
-            :use_cuda (:use_cuda model-args)
-            :args model-args))
+(try
+  (py/with-manual-gil-stack-rc-context
+    (let [pipe (ml/pipeline
+                (mm/set-inference-target [:labels])
+                (mm/model {:model-type :simpletransformers/classification
+                           :model-args model-args
+                           :eval_df pd-eval}))
+
+          _ (println :run-fit)
+          ctx-fit
+          (ml/fit-pipe
+           pd-train
+           pipe)
 
 
-(println :model-created)
-(def train-result  (py. model train_model pd-train :eval_df pd-eval))
+          _ (println :run-transform)
+          ctx-tf
+          (ml/transform-pipe pd-eval pipe ctx-fit)
 
 
-(println :model-trained)
+          actual (:labels pd-eval)
+          predicted (-> ctx-tf :metamorph/data :labels)
 
-(def eval-result
-  (->
-   (py. model eval_model pd-eval)
-   (py/->jvm)))
+          mcc (confuse/mcc actual predicted 1)]
 
-(println :evaluation-done)
+      (spit "eval.json"
 
-(spit "eval.json"
-      (json/write-str
-       {:train
+            (json/write-str
+             {:train {:mcc mcc}}))))
+  (println "training finished"))
 
-        (-> eval-result first (select-keys ["mcc"]))}))
-
-
-(println "training finished")
-
-(println :unlock-gil)
-(ffi/unlock-gil locked)
+  

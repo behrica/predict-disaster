@@ -11,3 +11,4 @@ test.arrow
 /eval.json
 /kaggle_submission.csv
 /runs
+/dvc_plots/
