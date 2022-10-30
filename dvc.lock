@@ -4,11 +4,11 @@ stages:
     cmd: ./train.sh
     deps:
     - path: deps.edn
-      md5: 5376fdd6b6eaf456fa30def8f71910d2
-      size: 709
+      md5: 58f797ea600cb657a1cb69c090cc8c0c
+      size: 853
     - path: src/train.clj
-      md5: b5bd34e963b080ab9171bf1e22480f13
-      size: 2128
+      md5: aeadabcf0725be3e7a6f37bbf8fae030
+      size: 2125
     - path: test.arrow
       md5: 044e70620365604959786ba2aebc9f96
       size: 428426
@@ -24,12 +24,12 @@ stages:
         train.train_batch_size: 32
     outs:
     - path: eval.json
-      md5: 08726b819fc00d473a49b2aff054bf6d
+      md5: 2570abba816c358e7039e68765c2775d
       size: 36
     - path: outputs
-      md5: 0c34b090df3bcbaf18b28597a1dc39de.dir
-      size: 17533231925
-      nfiles: 153
+      md5: 8c0134f09a255c8665d13f7bcc62e816.dir
+      size: 10958907484
+      nfiles: 98
   preprcess:
     cmd: clj preprocess.clj
     outs:
@@ -62,19 +62,19 @@ stages:
       md5: e17a0868efa512c21e2a8cc90da78b7d
       size: 849786
   predict_kaggle:
-    cmd: clojure -X predict_kaggle/predict-kaggle
+    cmd: clojure -A:add-foreign -X predict_kaggle/predict-kaggle
     deps:
     - path: deps.edn
-      md5: 5376fdd6b6eaf456fa30def8f71910d2
-      size: 709
+      md5: 58f797ea600cb657a1cb69c090cc8c0c
+      size: 853
     - path: outputs
-      md5: 0c34b090df3bcbaf18b28597a1dc39de.dir
-      size: 17533231925
-      nfiles: 153
+      md5: 8c0134f09a255c8665d13f7bcc62e816.dir
+      size: 10958907484
+      nfiles: 98
     - path: src/predict_kaggle.clj
       md5: c1278d90c31ee86386a79ca2b733c47b
       size: 1224
     outs:
     - path: kaggle_submission.csv
-      md5: 77136cba2914de0cb596682f13963d90
+      md5: 3e19d8118d24c9f7bb63fca5d331843d
       size: 22746

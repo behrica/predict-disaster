@@ -31,7 +31,7 @@ stages:
 
 
   predict_kaggle:
-     cmd: clojure -X predict_kaggle/predict-kaggle
+     cmd: clojure -A:add-foreign -X predict_kaggle/predict-kaggle
      deps:
        - deps.edn
        - outputs
